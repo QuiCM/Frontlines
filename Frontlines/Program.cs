@@ -28,7 +28,6 @@ namespace Frontlines
 
     public class ExampleApplication
     {
-
         public static void Main(string[] args)
         {
             IContextObject context = null; //null is used in this example
@@ -37,25 +36,13 @@ namespace Frontlines
             {
                 registry.AddCommand(typeof(RollCommand), new RegexString[] { "roll" }, "A roll command!");
                 registry.AddCommand(typeof(RandomCommand), new RegexString[] { "random" }, "A roll command!");
-                registry.OnInputResult += Registry_OnInputResult;
-
-                for (int i = 0; i < 500; i++)
-                {
-                    Thread thread = new Thread(() => { registry.HandleInput($"random 1 {i}", context); });
-                    thread.Start();
-                }
-
+                
                 string command;
                 while ((command = Console.ReadLine()) != "quit")
                 {
-                    registry.HandleInput(command, context);
+                    registry.HandleInput(command, context, (r, o) => { Console.WriteLine($"Result: {r} - Output: {o}"); });
                 }
             }
-        }
-
-        private static void Registry_OnInputResult(object sender, InputResultEventArgs e)
-        {
-            Console.WriteLine($"ID: {e.ID} - Result: {e.Result} - Output: {e.Output}");
         }
     }
 }
