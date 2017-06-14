@@ -3,6 +3,7 @@ using HQ.Attributes;
 using HQ.Interfaces;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Frontlines
 {
@@ -16,12 +17,13 @@ namespace Frontlines
         }
     }
 
-    [CommandClass]
+    [CommandClass(asynchronous:true)]
     public class RandomCommand
     {
         [CommandExecutor]
-        public object Execute(IContextObject ctx, int min = 1, int max = 100)
+        public async Task<object> Execute(IContextObject ctx, int min = 1, int max = 100)
         {
+            await Task.Delay(5000);
             return new Random().Next(min, max + 1);
         }
     }

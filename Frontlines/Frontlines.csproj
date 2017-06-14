@@ -6,14 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Headquarters" Version="1.1.0" />
+    <PackageReference Include="Headquarters" Version="1.2.0" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Headquarters">
-      <HintPath>refs\Headquarters.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
