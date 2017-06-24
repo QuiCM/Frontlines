@@ -2,29 +2,41 @@
 using HQ.Attributes;
 using HQ.Interfaces;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Frontlines
 {
     [CommandClass]
     public class RollCommand
     {
-        [CommandExecutor]
+        [CommandExecutor("Rolls a dice with a number of sides", "roll")]
         public object Execute(IContextObject ctx, int sides = 6)
         {
             return new Random().Next(1, sides + 1);
         }
     }
 
-    [CommandClass(asynchronous:true)]
+    [CommandClass]
     public class RandomCommand
     {
-        [CommandExecutor]
-        public async Task<object> Execute(IContextObject ctx, int min = 1, int max = 100)
+        [CommandExecutor("Rolls a random number", "random")]
+        public object Execute(IContextObject ctx, int min = 1, int max = 100)
         {
-            await Task.Delay(5000);
             return new Random().Next(min, max + 1);
+        }
+
+        [CommandExecutor("Rolls a random number", "float random")]
+        public object ExecuteFloat(IContextObject ctx, float min = 1.0f, float max = 100.0f)
+        {
+            return new Random().NextDouble() * (max - min + 1) + min; 
+        }
+
+        [SubcommandExecutor(nameof(Execute), "Returns a random name", "name")]
+        public object SubExecutor(IContextObject ctx)
+        {
+            string[] names = new[] { "jeff", "john", "james", "jim", "dave", "doug", "donald", "ryan", "ross", "ray" };
+            int num = new Random().Next(0, 10);
+
+            return names[num];
         }
     }
 
@@ -36,8 +48,8 @@ namespace Frontlines
 
             using (CommandRegistry registry = new CommandRegistry(new RegistrySettings()))
             {
-                registry.AddCommand(typeof(RollCommand), new RegexString[] { "roll" }, "A roll command!");
-                registry.AddCommand(typeof(RandomCommand), new RegexString[] { "random" }, "A roll command!");
+                registry.AddCommand(typeof(RollCommand));
+                registry.AddCommand(typeof(RandomCommand));
                 
                 string command;
                 while ((command = Console.ReadLine()) != "quit")
